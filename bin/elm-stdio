@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+"use strict";
+
+var path = require("path");
+var argv = require("argv");
+var Console = require("console").Console;
+var pkg = require("../package.json");
+var stdio = require("../stdio");
+
+// Redirect logs to stderr
+var stdout = process.stdout
+Object.defineProperty(process, "stdout", {
+  configurable: true,
+  enumerable: true,
+  value: process.stderr
+});
+var console = new Console(process.stdout, process.stderr);
+
+// Parse argv
+argv.version("v" + pkg.version);
+argv.info("Example: elm-stdio ./elm.js");
+var target = argv.run().targets[0];
+
+if(!target) {
+  console.error("No target specified");
+  process.exit(1);
+}
+
+// Load module
+var Elm = require(path.resolve(process.cwd(), target));
+
+// Wait for data to be piped
+var data = "";
+
+process.stdin.on("data", function (chunk) {
+  data += chunk;
+});
+
+process.stdin.on("end", function () {
+  // Invoke elm module
+  stdio(Elm, data, function (err, response) {
+    if(err) {
+      console.error(err);
+      process.exit(1);
+    }
+    else {
+      stdout.write(response);
+      process.exit(0);
+    }
+  });
+});
