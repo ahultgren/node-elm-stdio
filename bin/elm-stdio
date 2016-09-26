@@ -9,10 +9,25 @@ var stdio = require("../stdio");
 // Parse argv
 argv.version("v" + pkg.version);
 argv.info("Example: elm-stdio ./elm.js");
-var target = argv.run().targets[0];
+argv.option({
+    name: "name",
+    short: "n",
+    type: "string",
+    description: "Name of the exposed module to call",
+    example: "'elm-stdio --name=Main'"
+});
+
+var args = argv.run();
+var target = args.targets[0];
+var name = args.options.name;
 
 if(!target) {
   process.stderr.write("No target specified\n");
+  process.exit(1);
+}
+
+if(!name) {
+  process.stderr.write("No name specified\n");
   process.exit(1);
 }
 
@@ -36,7 +51,7 @@ process.stdin.on("end", function () {
   };
 
   // Invoke elm module
-  stdio(Elm, data, function (_, response) {
+  stdio(Elm, data, name, function (_, response) {
     if(err) {
       process.stderr.write("error");
       process.stderr.write(err);
