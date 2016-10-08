@@ -16,10 +16,18 @@ argv.option({
     description: "Name of the exposed module to call",
     example: "'elm-stdio --name=Main'"
 });
+argv.option({
+    name: "encode",
+    short: "e",
+    type: "boolean",
+    description: "Set if you want to get text-entries like <>& as &lt; &gt; &amp;",
+    example: "'elm-stdio --encode=1'"
+});
 
 var args = argv.run();
 var target = args.targets[0];
 var name = args.options.name;
+var encode = args.options.encode;
 
 if(!target) {
   process.stderr.write("No target specified\n");
@@ -51,7 +59,7 @@ process.stdin.on("end", function () {
   };
 
   // Invoke elm module
-  stdio(Elm, data, name, function (_, response) {
+  stdio(Elm, data, name, encode, function (_, response) {
     if(err) {
       process.stderr.write("error");
       process.stderr.write(err);

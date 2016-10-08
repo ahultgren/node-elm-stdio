@@ -38,6 +38,14 @@ Example: elm-stdio ./elm.js
 	--version
 		Displays version info
 		elm-stdio --version
+
+	--name, -n
+		Name of the exposed module to call
+		'elm-stdio --name=Main'
+
+	--encode, -e
+		Set if you want to get text-entries like <>& as &lt; &gt; &amp;
+		'elm-stdio --encode=1'
 ```
 
 ### Programmatically
@@ -51,7 +59,3 @@ stdio(Elm, flags, function (err, data) {
   console.log("This will be normal string:", data);
 });
 ```
-
-## Current drawbacks
-
-* Does not support other elements than `Html.text`. If you need that you are welcome to suggest a solution that doesn't make it harder to extract text, since that is the primary use case.

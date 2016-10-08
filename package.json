@@ -19,6 +19,7 @@
   "author": "Andreas Hultgren",
   "license": "ISC",
   "dependencies": {
-    "argv": "0.0.2"
+    "argv": "0.0.2",
+    "min-document": "^2.19.0"
   }
 }

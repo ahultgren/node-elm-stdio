@@ -1,13 +1,21 @@
 "use strict";
 
-var Node = require("./node");
+var document = require("min-document");
 
-Node.globalDocument();
+global.document = document;
 
-module.exports = function (Elm, data, name, callback) {
-  var rootNode = new Node();
+var decode = function (str) {
+  return str
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+module.exports = function (Elm, data, name, encode, callback) {
+  var rootNode = document.createElement("div");
   Elm[name].embed(rootNode, data);
   setTimeout(() => {
-    callback(null, rootNode.stringify());
+    var result = encode ? rootNode.toString() : decode(rootNode.toString());
+    callback(null, result.substring(5, result.length - 6));
   }, 0);
 };
