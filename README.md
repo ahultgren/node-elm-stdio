@@ -50,12 +50,26 @@ Example: elm-stdio ./elm.js
 
 ### Programmatically
 
-```
+```js
 var stdio = require("node-elm-stdio");
 var Elm = require("./dist/my-elm.js");
 var flags = "Whatever you want";
+var name = "Main";
+var encode = false; // Whether or not to html encode the output
 
-stdio(Elm, flags, function (err, data) {
+stdio(Elm, flags, name, encode, function (err, data) {
   console.log("This will be normal string:", data);
 });
+```
+
+### Programmatically (with process stream helper)
+
+```js
+var stdin = require("node-elm-stdio/stdio/stdin");
+var Elm = require("./dist/my-elm.js");
+var name = "Main";
+var encode = false; // Whether or not to html encode the output
+
+stdin(Elm, name, encode);
+// Stdin is provided as flags and output is automatically sent to stdout
 ```
